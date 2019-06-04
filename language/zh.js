@@ -18,6 +18,6 @@ module.exports = {
         gen_success: "生成成功"
     },
     prompt: {
-        create_pwd: "自定义密码,直接点确定会生成随机密码"
+        create_pwd: "自定义密码"
     }
 };
