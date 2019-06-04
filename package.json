@@ -1,11 +1,11 @@
 {
-    "name": "生成Shell",
-    "name_en": "GenShell",
+    "name": "php_xor_bypass",
+    "name_en": "php_xor_bypass",
     "main": "index.js",
     "icon": "random",
     "version": "1.0",
     "description": "生成免杀Shell",
-    "description_en": "generate shell",
+    "description_en": "generate bypass webshell",
     "author": {
       "name": "yzddmr6",
       "email": "yzddmr6@gmail.com"
