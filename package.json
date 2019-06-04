@@ -1,10 +1,10 @@
 {
-    "name": "php_xor_bypass",
-    "name_en": "php_xor_bypass",
+    "name": "宇宙无敌棒棒马",
+    "name_en": "the best webshell of the world",
     "main": "index.js",
     "icon": "random",
     "version": "1.0",
-    "description": "生成免杀Shell",
+    "description": "黑阔神器，谁用谁知道",
     "description_en": "generate bypass webshell",
     "author": {
       "name": "yzddmr6",
