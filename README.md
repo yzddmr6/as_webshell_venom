@@ -2,10 +2,8 @@
 利用随机异或无限免杀D盾蚁剑版 (thx @SardineFish & @Medicean)
 
 
-
-PHP原版请移步:https://github.com/yzddmr6/php_xor_bypass
-
-PYTHON版请移步:https://github.com/c0ny1/WorkScripts/blob/master/php-xor-bypass/php_xor_bypass.py
+原项目地址:
+https://github.com/yzddmr6/webshell-venom
 
 
 ### 生成 Shell 样例
