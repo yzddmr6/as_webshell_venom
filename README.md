@@ -1,5 +1,5 @@
-# as_php_xor_bypass
-利用随机异或无限免杀D盾蚁剑版 (thx @SardineFish & @Medicean)
+# as_webshell_venom
+as_webshell_venom蚁剑版 (thx @SardineFish & @Medicean)
 
 
 原项目地址:
