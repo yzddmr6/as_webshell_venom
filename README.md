@@ -1,12 +1,17 @@
-# as_php_xor_bypass
-利用随机异或无限免杀D盾蚁剑版 (thx @SardineFish & @Medicean)
+# as_webshell_venom
+as_webshell_venom蚁剑版 (thx @SardineFish & @Medicean)
 
 
 原项目地址:
 https://github.com/yzddmr6/webshell-venom
 
+#  2.0 更新日志
 
-### 生成 Shell 样例
+1. 代码重构
+
+2. 增加 asp aspx 免杀类型
+
+### 生成 php Shell 样例
 
 ```
 <?php 
