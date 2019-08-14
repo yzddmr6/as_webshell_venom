@@ -5,6 +5,9 @@ as_webshell_venom蚁剑版 (thx @SardineFish & @Medicean)
 原项目地址:
 https://github.com/yzddmr6/webshell-venom
 
+关于 webshell-venom 的一个重要通知
+https://yzddmr6.tk/2019/08/13/webshell-venom-notice/
+
 #  2.0 更新日志
 
 1. 代码重构
