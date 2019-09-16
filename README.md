@@ -6,9 +6,6 @@ webshell-venom 蚁剑版 (thx @SardineFish & @Medicean)
 
 https://github.com/yzddmr6/webshell-venom
 
-## 关于 webshell-venom 的一个重要通知
-
-https://yzddmr6.tk/2019/08/13/webshell-venom-notice/
 
 # 3.2 更新日志
 
